@@ -53,7 +53,7 @@ export const FileUploader = () => {
       return;
     }
 
-    //@ts-ignore
+    //@ts-expect-error
     const syntheticEvent = {
       target: {
         files: droppedFiles,

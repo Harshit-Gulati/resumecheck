@@ -7,11 +7,11 @@ import { Analysis } from "./analysis";
 import { Actions } from "./actions";
 
 export const Results = () => {
+  const [activeTab, setActiveTab] = useState<TabKeys>(TabKeys.overview);
+
   const { results, loading } = useStepContext();
 
   if (!results || loading) return <Skeleton />;
-
-  const [activeTab, setActiveTab] = useState<TabKeys>(TabKeys.overview);
 
   return (
     <>

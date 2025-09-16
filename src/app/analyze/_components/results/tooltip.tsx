@@ -90,7 +90,7 @@ export const Tooltip = ({
     ? cloneElement(children, {
         ref: refs.setReference,
         ...getReferenceProps(),
-        //@ts-ignore
+        //@ts-expect-error
         ...children.props,
       })
     : children;

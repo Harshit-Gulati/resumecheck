@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import { getPrompt } from "./prompt";
 import { GeminiAnalysisResponse } from "@/types/prompt";
 
@@ -9,7 +9,7 @@ const genAI = new GoogleGenAI({
 export const getGeminiAnalysis = async (
   resumeText: string,
   jobDescription: string,
-): Promise<any> => {
+) => {
   const prompt = getPrompt(resumeText, jobDescription);
 
   try {

@@ -1,6 +1,7 @@
+import { GeminiAnalysisResponse } from "@/types/prompt";
 import { Tooltip } from "./tooltip";
 
-export const Analysis = ({ results }: { results: any }) => {
+export const Analysis = ({ results }: { results: GeminiAnalysisResponse }) => {
   return (
     <>
       {/* Skills Gap */}

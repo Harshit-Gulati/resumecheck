@@ -65,61 +65,60 @@ export const StepContextProvider = ({
     return { isValid: true };
   };
 
-  const handleFileChange = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
 
-      if (!file) return;
+    if (!file) return;
 
-      const validation = validateFile(file);
-      if (!validation.isValid) {
-        toast.error(validation.error);
-        return;
-      }
+    const validation = validateFile(file);
+    if (!validation.isValid) {
+      toast.error(validation.error);
+      return;
+    }
 
-      const key = stepNumber === 1 ? "resumeFile" : "jdFile";
-      const fileType = stepNumber === 1 ? "Resume" : "Job Description";
+    const key = stepNumber === 1 ? "resumeFile" : "jdFile";
+    const fileType = stepNumber === 1 ? "Resume" : "Job Description";
 
-      setIsUploading(true);
+    setIsUploading(true);
 
-      const uploadToast = toast.loading(`Uploading ${fileType}...`);
+    const uploadToast = toast.loading(`Uploading ${fileType}...`);
 
-      try {
-        const newBlob = await upload(file.name, file, {
-          access: "public",
-          handleUploadUrl: "/api/blob/upload",
-          onUploadProgress: (progress) => {
-            console.log("progress", progress);
-          },
-        });
+    try {
+      const newBlob = await upload(file.name, file, {
+        access: "public",
+        handleUploadUrl: "/api/blob/upload",
+        onUploadProgress: (progress) => {
+          console.log("progress", progress);
+        },
+      });
 
-        setFiles((prev) => ({
-          ...prev,
-          [key]: { file, url: newBlob.url },
-        }));
+      setFiles((prev) => ({
+        ...prev,
+        [key]: { file, url: newBlob.url },
+      }));
 
-        toast.success(`${fileType} uploaded successfully!`, {
-          id: uploadToast,
-        });
+      toast.success(`${fileType} uploaded successfully!`, {
+        id: uploadToast,
+      });
 
-        event.target.value = "";
-      } catch (error) {
-        toast.error(`Failed to upload ${fileType}`, {
-          id: uploadToast,
-          description: (error as Error).message,
-        });
-        const urls = [];
-        if (files.resumeFile?.url) urls.push(files.resumeFile.url);
-        if (files.jdFile?.url) urls.push(files.jdFile.url);
-        cleanupBlobs(urls);
-      } finally {
-        setIsUploading(false);
-      }
-    },
-    [stepNumber],
-  );
+      event.target.value = "";
+    } catch (error) {
+      toast.error(`Failed to upload ${fileType}`, {
+        id: uploadToast,
+        description: (error as Error).message,
+      });
+      const urls = [];
+      if (files.resumeFile?.url) urls.push(files.resumeFile.url);
+      if (files.jdFile?.url) urls.push(files.jdFile.url);
+      cleanupBlobs(urls);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
-  const removeFile = useCallback(async (type: "resume" | "jd") => {
+  const removeFile = async (type: "resume" | "jd") => {
     const key = type === "resume" ? "resumeFile" : "jdFile";
     const fileType = type === "resume" ? "Resume" : "Job Description";
 
@@ -134,7 +133,7 @@ export const StepContextProvider = ({
     });
 
     toast.info(`${fileType} removed`);
-  }, []);
+  };
 
   const canProceed = useCallback(() => {
     if (isUploading) return false;
@@ -149,13 +148,13 @@ export const StepContextProvider = ({
     }
   }, [stepNumber, files, isUploading]);
 
-  const handlePrev = useCallback(() => {
+  const handlePrev = () => {
     if (stepNumber === 1) return;
 
     setStepNumber((prev) => prev - 1);
-  }, [stepNumber]);
+  };
 
-  const handleNext = useCallback(() => {
+  const handleNext = () => {
     if (isUploading) {
       toast.error("Please wait for file upload to complete");
       return;
@@ -174,7 +173,7 @@ export const StepContextProvider = ({
     }
 
     setStepNumber((prev) => prev + 1);
-  }, [stepNumber, canProceed, isUploading]);
+  };
 
   const cleanupBlobs = async (urls: string[]) => {
     try {
